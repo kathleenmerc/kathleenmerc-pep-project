@@ -4,7 +4,6 @@ import Model.Account;
 import DAO.AccountDAO;
 
 
-
 public class AccountService {
     AccountDAO accountDAO;
 
@@ -20,8 +19,9 @@ public class AccountService {
         Account newAddedAccount = accountDAO.createAccount(account);
         return newAddedAccount;
     }
-
+ 
 } 
+
 
 
     
