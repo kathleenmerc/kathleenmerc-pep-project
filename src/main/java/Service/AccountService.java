@@ -19,6 +19,12 @@ public class AccountService {
         Account newAddedAccount = accountDAO.createAccount(account);
         return newAddedAccount;
     }
+
+    public Account getAccount(Account account) {
+        Account existingAccount = accountDAO.getAccountByUsernameAndPassword(account.getUsername(), account.getPassword());
+        return existingAccount;
+    }
+    
  
 } 
 

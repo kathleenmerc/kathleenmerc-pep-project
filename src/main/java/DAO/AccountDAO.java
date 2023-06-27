@@ -41,21 +41,32 @@ public class AccountDAO {
 
 
 
-    public static Account getAccountByUsername(String username){
+    /**
+     * @param username
+     * @param password
+     * @return
+     */
+    public static Account getAccountByUsernameAndPassword(String username, String password){
         Connection connection = ConnectionUtil.getConnection();
         try {
             
-            String sql = "SELECT * from account WHERE username = ?;";
+            String sql = "SELECT account_id, username, password FROM account WHERE username = ? AND password = ?";
             
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            
 
             ResultSet rs = preparedStatement.executeQuery();
+
             while(rs.next()){
-                return null;
+                int accountId = rs.getInt("account_id");
+                String accountUsername = rs.getString("username");
+                String accountPassword = rs.getString("password");
+                return new Account(accountId, accountUsername, accountPassword);
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return null;
