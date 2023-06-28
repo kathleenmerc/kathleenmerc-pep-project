@@ -1,5 +1,7 @@
 package Controller;
 
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -39,7 +41,9 @@ public class SocialMediaController {
         app.post("/register", this::postAccount);
         app.post("/login", this::loginAccount);
         app.post("/messages", this::createMessage);
-
+        app.get("/messages", this::getAllMessagesHandler);
+        app.get("/messages/{message_id}", this::getMessageByIdHandler);
+        
         return app;
     }
 
@@ -98,4 +102,24 @@ public class SocialMediaController {
             ctx.status(400); // Bad request
         }
     }
+
+    public void getAllMessagesHandler(Context ctx){
+        List<Message> messages = messageService.getAllMessagesService();
+        ctx.status(200);
+        ctx.json(messages);
+    }
+
+    public void getMessageByIdHandler(Context ctx){
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message message = messageService.getMessageByIdService(message_id);
+
+        if (message != null) {
+            ctx.status(200);
+            ctx.json(message);
+        } else {
+            ctx.status(200); // Message not found
+            ctx.json("");
+        }
+    }
+   
 }

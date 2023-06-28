@@ -75,12 +75,10 @@ public class AccountDAO {
     public Object getAccountById(int id){
         Connection connection = ConnectionUtil.getConnection();
         try {
-            //Write SQL logic here
             String sql = "SELECT * from account WHERE account_id = ?;";
             
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            //write preparedStatement's setString and setInt methods here.
             preparedStatement.setInt(1, id);
 
             ResultSet rs = preparedStatement.executeQuery();
