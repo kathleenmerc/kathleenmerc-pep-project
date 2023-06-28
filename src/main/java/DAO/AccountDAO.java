@@ -46,7 +46,7 @@ public class AccountDAO {
      * @param password
      * @return
      */
-    public static Account getAccountByUsernameAndPassword(String username, String password){
+    public Account getAccountByUsernameAndPassword(String username, String password){
         Connection connection = ConnectionUtil.getConnection();
         try {
             
@@ -67,6 +67,28 @@ public class AccountDAO {
                 return new Account(accountId, accountUsername, accountPassword);
             }
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public Object getAccountById(int id){
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            //Write SQL logic here
+            String sql = "SELECT * from account WHERE account_id = ?;";
+            
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            //write preparedStatement's setString and setInt methods here.
+            preparedStatement.setInt(1, id);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                int accountId = rs.getInt("account_id");
+                return accountId;
+            }
+        }catch(SQLException e){
             System.out.println(e.getMessage());
         }
         return null;

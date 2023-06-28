@@ -72,6 +72,19 @@ public class SocialMediaController {
         } else {
             ctx.status(401); // Invalid login credentials
         }
+    }
+
+    private void createMessage(Context ctx) throws JsonProcessingException {
+        
+        ObjectMapper mapper = new ObjectMapper();
+        Message inputMessage = mapper.readValue(ctx.body(), Message.class);
+        
+        if (inputMessage) {
+            ctx.status(200); 
+            ctx.json(inputMessage);
+        } else {
+            ctx.status(400);
+        }
 
         
 

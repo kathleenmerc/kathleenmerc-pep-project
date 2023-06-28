@@ -17,7 +17,7 @@ public class MessageDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, message.getMessage_text());
-            preparedStatement.setString(2, message.getPosted_by());
+            preparedStatement.setInt(2, message.getPosted_by());
 
             preparedStatement.executeUpdate();
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();

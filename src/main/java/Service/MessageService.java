@@ -1,12 +1,13 @@
 package Service;
 
 import DAO.MessageDAO;
+import Model.Account;
 import Model.Message;
 import Service.AccountService;
 
 public class MessageService {
     MessageDAO messageDAO;
-    private AccountService accountService;
+    AccountService accountService;
 
     public MessageService(){
         messageDAO = new MessageDAO();
@@ -26,7 +27,7 @@ public class MessageService {
         }
     
         // Check if the posted_by user exists
-        Account postedBy = accountService.getAccount(message.getPosted_by());
+        Object postedBy = accountService.getAccountByIdService(message.getPosted_by());
         if (postedBy == null) {
             return null; // User does not exist
         }

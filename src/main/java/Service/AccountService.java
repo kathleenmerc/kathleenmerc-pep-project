@@ -24,6 +24,12 @@ public class AccountService {
         Account existingAccount = accountDAO.getAccountByUsernameAndPassword(account.getUsername(), account.getPassword());
         return existingAccount;
     }
+
+    public Object getAccountByIdService(int id) {
+        Object existingAccountId = accountDAO.getAccountById(id);
+        return existingAccountId;
+    }
+
     
  
 } 
