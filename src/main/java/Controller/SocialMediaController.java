@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import DAO.AccountDAO;
 import Model.Account;
+import Model.Message;
 import Service.AccountService;
+import Service.MessageService;
+
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -24,14 +27,18 @@ import io.javalin.http.Context;
 public class SocialMediaController {
 
     AccountService accountService;
+    MessageService messageService;
+
     public SocialMediaController() {
         accountService = new AccountService();
+        messageService = new MessageService();
     }
     
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         app.post("/register", this::postAccount);
         app.post("/login", this::loginAccount);
+        app.post("/messages", this::createMessage);
 
         return app;
     }
@@ -79,14 +86,16 @@ public class SocialMediaController {
         ObjectMapper mapper = new ObjectMapper();
         Message inputMessage = mapper.readValue(ctx.body(), Message.class);
         
-        if (inputMessage) {
-            ctx.status(200); 
-            ctx.json(inputMessage);
+        if (inputMessage.getMessage_text() != null && !inputMessage.getMessage_text().isEmpty() && inputMessage.getMessage_text().length() <= 254) {
+            Message createdMessage = messageService.addMessage(inputMessage, accountService);
+            if (createdMessage != null) {
+                ctx.status(200);
+                ctx.json(createdMessage);
+            } else {
+                ctx.status(400); // Bad request
+            }
         } else {
-            ctx.status(400);
+            ctx.status(400); // Bad request
         }
-
-        
-
     }
 }
