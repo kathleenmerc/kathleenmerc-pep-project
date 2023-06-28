@@ -56,10 +56,15 @@ public class MessageService {
         return message;
     }
 
-    public Message updateMessageByIdService(int id, String newMessageText) {
-        Message message = messageDAO.updateMessageById(id, newMessageText);
 
-        return message;
+    public Message updateMessageService(int message_id, Message message){
+        Message existingMessageId = messageDAO.getMessageById(message_id);
+        if (existingMessageId != null) {
+           messageDAO.updateMessageById(message_id, message);
+           Message updatedMessage = messageDAO.getMessageById(message_id);
+           return updatedMessage;
+        } 
+        return null;
     }
 
     

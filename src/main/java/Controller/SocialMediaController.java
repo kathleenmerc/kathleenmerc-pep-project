@@ -139,14 +139,15 @@ public class SocialMediaController {
 
 
 
-    public void updateMessageByIdHandler(Context ctx){
+    public void updateMessageByIdHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));
-        String newMessageText = ctx.body();
-        Message message = messageService.updateMessageByIdService(message_id, newMessageText);
+        Message updatedMessage = messageService.updateMessageService(message_id, message);
 
-        if (message != null) {
+        if (updatedMessage != null && !message.getMessage_text().isBlank() && message.getMessage_text().length() < 255) {
             ctx.status(200);
-            ctx.json(message);
+            ctx.json(updatedMessage);
         } else {
             ctx.status(400);
         }

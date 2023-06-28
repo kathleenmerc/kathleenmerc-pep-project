@@ -123,42 +123,23 @@ public class MessageDAO {
     }
 
 
-    public Message updateMessageById(int id, String newMessageText){
+    public Message updateMessageById(int id, Message message){
         Connection connection = ConnectionUtil.getConnection();
         try {
-            // first get message by id
-            String sql = "SELECT * from message WHERE message_id = ?;";
+            //Write SQL logic here
+            String sql = "UPDATE message SET message_text = ? WHERE message_id = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id);
-            ResultSet rs = preparedStatement.executeQuery();
 
-            // check if message exists
-            if (rs.next()){
-                Message existingMessage = new Message(
-                    rs.getInt("message_id"), 
-                    rs.getInt("posted_by"),
-                    rs.getString("message_text"),
-                    rs.getInt("time_posted_epoch"));
+            //write PreparedStatement setString and setInt methods here.
+            preparedStatement.setString(1, message.getMessage_text());
+            preparedStatement.setInt(2, id);
 
-            // execute update SQL update and return updated message
-            if (newMessageText != null && !newMessageText.isEmpty() && newMessageText.length()< 255) {
-                String updateSql = "UPDATE message SET message_text = ? WHERE message_id = ?";
+            preparedStatement.executeUpdate();
 
-                PreparedStatement updateStatement = connection.prepareStatement(updateSql);
+            return message;
 
-                updateStatement.setString(1, newMessageText);
-                updateStatement.setInt(2, id);
-
-                updateStatement.executeUpdate();
-                Message updatedMessage = getMessageById(id);
-                return updatedMessage;
-            } else {
-                return null;
-            }
-            }
-
-        } catch(SQLException e) {
-                System.out.println(e.getMessage());
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
         }
             return null;
     }
