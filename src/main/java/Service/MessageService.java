@@ -50,5 +50,11 @@ public class MessageService {
         return message;
     }
 
+    public Message deleteMessageByIdService(int id) {
+        Message message = messageDAO.deleteMessageById(id);
+
+        return message;
+    }
+
     
 }
