@@ -90,11 +90,13 @@ public class MessageDAO {
     public Message deleteMessageById(int id){
         Connection connection = ConnectionUtil.getConnection();
         try {
+            // first get message by id
             String sql = "SELECT * from message WHERE message_id = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
             ResultSet rs = preparedStatement.executeQuery();
 
+            // check if message exists
             while(rs.next()){
                 Message deletedMessage = new Message(rs.getInt("message_id"), 
                 rs.getInt("posted_by"),
@@ -102,6 +104,7 @@ public class MessageDAO {
                 rs.getInt("time_posted_epoch")
             );
 
+            // execute delete SQL update and return deleted message
             String deleteSql = "DELETE FROM message WHERE message_id = ?;";
             
             PreparedStatement deleteStatement = connection.prepareStatement(deleteSql);
@@ -112,6 +115,47 @@ public class MessageDAO {
 
             return deletedMessage;
         } 
+
+        } catch(SQLException e) {
+                System.out.println(e.getMessage());
+        }
+            return null;
+    }
+
+
+    public Message updateMessageById(int id, String newMessageText){
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            // first get message by id
+            String sql = "SELECT * from message WHERE message_id = ?;";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            // check if message exists
+            if (rs.next()){
+                Message existingMessage = new Message(
+                    rs.getInt("message_id"), 
+                    rs.getInt("posted_by"),
+                    rs.getString("message_text"),
+                    rs.getInt("time_posted_epoch"));
+
+            // execute update SQL update and return updated message
+            if (newMessageText != null && !newMessageText.isEmpty() && newMessageText.length()< 255) {
+                String updateSql = "UPDATE message SET message_text = ? WHERE message_id = ?";
+
+                PreparedStatement updateStatement = connection.prepareStatement(updateSql);
+
+                updateStatement.setString(1, newMessageText);
+                updateStatement.setInt(2, id);
+
+                updateStatement.executeUpdate();
+                Message updatedMessage = getMessageById(id);
+                return updatedMessage;
+            } else {
+                return null;
+            }
+            }
 
         } catch(SQLException e) {
                 System.out.println(e.getMessage());
