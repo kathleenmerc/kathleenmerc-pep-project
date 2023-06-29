@@ -67,5 +67,10 @@ public class MessageService {
         return null;
     }
 
+    public List<Message> getMessagesByUserIdService(int userId) {
+        return messageDAO.getMessagesByUserId(userId);
+    }
+    
+
     
 }

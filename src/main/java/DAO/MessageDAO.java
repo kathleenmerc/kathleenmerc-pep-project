@@ -126,11 +126,9 @@ public class MessageDAO {
     public Message updateMessageById(int id, Message message){
         Connection connection = ConnectionUtil.getConnection();
         try {
-            //Write SQL logic here
             String sql = "UPDATE message SET message_text = ? WHERE message_id = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            //write PreparedStatement setString and setInt methods here.
             preparedStatement.setString(1, message.getMessage_text());
             preparedStatement.setInt(2, id);
 
@@ -143,5 +141,33 @@ public class MessageDAO {
         }
             return null;
     }
+
+
+    public List<Message> getMessagesByUserId(int userId) {
+        Connection connection = ConnectionUtil.getConnection();
+        List<Message> messages = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM message WHERE posted_by = ?;";
+            
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, userId);
+            
+            ResultSet rs = preparedStatement.executeQuery();
+    
+            while (rs.next()) {
+                Message message = new Message(
+                    rs.getInt("message_id"),
+                    rs.getInt("posted_by"),
+                    rs.getString("message_text"),
+                    rs.getInt("time_posted_epoch")
+                );
+                messages.add(message);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return messages;
+    }
+    
     
 }
