@@ -5,15 +5,14 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import DAO.AccountDAO;
+import io.javalin.Javalin;
+import io.javalin.http.Context;
+
 import Model.Account;
 import Model.Message;
 import Service.AccountService;
 import Service.MessageService;
 
-
-import io.javalin.Javalin;
-import io.javalin.http.Context;
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
@@ -53,6 +52,9 @@ public class SocialMediaController {
      * This is an example handler for an example endpoint.
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
+
+
+    // Create a new account
     private void postAccount(Context ctx) throws JsonProcessingException {
         
         ObjectMapper mapper = new ObjectMapper();
@@ -61,7 +63,6 @@ public class SocialMediaController {
 
         if(newAddedAccount == null || newAddedAccount.username == "") {
             ctx.status(400);
-            
         }else{
             ctx.status(200);
             ctx.json(newAddedAccount);
@@ -70,13 +71,11 @@ public class SocialMediaController {
     }
 
 
+    // Login to existing account
     private void loginAccount(Context ctx) throws JsonProcessingException {
         
         ObjectMapper mapper = new ObjectMapper();
         Account inputAccount = mapper.readValue(ctx.body(), Account.class);
-        
-        // Account account = AccountService.getAccountByUsernameAndPassword(inputAccount.getUsername(), inputAccount.getPassword());
-
         Account existingAccount = accountService.getAccount(inputAccount);
 
         if (existingAccount != null && existingAccount.getUsername().equals(inputAccount.getUsername()) && existingAccount.getPassword().equals(inputAccount.getPassword())) {
@@ -87,6 +86,8 @@ public class SocialMediaController {
         }
     }
 
+
+    // Create a new message
     private void createMessageHandler(Context ctx) throws JsonProcessingException {
         
         ObjectMapper mapper = new ObjectMapper();
@@ -95,22 +96,26 @@ public class SocialMediaController {
         if (inputMessage.getMessage_text() != null && !inputMessage.getMessage_text().isEmpty() && inputMessage.getMessage_text().length() <= 254) {
             Message createdMessage = messageService.addMessage(inputMessage, accountService);
             if (createdMessage != null) {
-                ctx.status(200);
+                ctx.status(200); 
                 ctx.json(createdMessage);
             } else {
-                ctx.status(400); // Bad request
+                ctx.status(400); 
             }
         } else {
-            ctx.status(400); // Bad request
+            ctx.status(400); 
         }
     }
 
+
+    // Get all messages in database
     public void getAllMessagesHandler(Context ctx){
         List<Message> messages = messageService.getAllMessagesService();
         ctx.status(200);
         ctx.json(messages);
     }
 
+
+    // Get a message by message_id
     public void getMessageByIdHandler(Context ctx){
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));
         Message message = messageService.getMessageByIdService(message_id);
@@ -124,7 +129,7 @@ public class SocialMediaController {
         }
     }
 
-
+    // Delete a message by message_id
     public void deleteMessageByIdHandler(Context ctx){
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));
         Message message = messageService.deleteMessageByIdService(message_id);
@@ -139,7 +144,7 @@ public class SocialMediaController {
     }
 
 
-
+    // Update a message by message_id
     public void updateMessageByIdHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(ctx.body(), Message.class);
@@ -154,6 +159,8 @@ public class SocialMediaController {
         }
     }
 
+
+    // get all messages from an user account
     private void getMessagesByUserIdHandler(Context ctx) {
         int userId = Integer.parseInt(ctx.pathParam("account_id"));
         List<Message> messages = messageService.getMessagesByUserIdService(userId);

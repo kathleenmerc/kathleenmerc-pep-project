@@ -29,9 +29,6 @@ public class AccountService {
         Object existingAccountId = accountDAO.getAccountById(id);
         return existingAccountId;
     }
-
-    
- 
 } 
 
 

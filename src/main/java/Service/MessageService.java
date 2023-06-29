@@ -3,9 +3,7 @@ package Service;
 import java.util.List;
 
 import DAO.MessageDAO;
-import Model.Account;
 import Model.Message;
-import Service.AccountService;
 
 public class MessageService {
     MessageDAO messageDAO;
@@ -20,7 +18,6 @@ public class MessageService {
         this.messageDAO = messageDAO;
         this.accountService = accountService;
     }
-
 
     public Message addMessage(Message message, AccountService accountService) {
         // Check if the message is valid
@@ -69,8 +66,5 @@ public class MessageService {
 
     public List<Message> getMessagesByUserIdService(int userId) {
         return messageDAO.getMessagesByUserId(userId);
-    }
-    
-
-    
+    }   
 }
