@@ -165,6 +165,6 @@ public class SocialMediaController {
         int userId = Integer.parseInt(ctx.pathParam("account_id"));
         List<Message> messages = messageService.getMessagesByUserIdService(userId);
         ctx.json(messages);
-        ctx.status(200);
+        ctx.status(200); 
     }
 }
